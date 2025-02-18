@@ -33,6 +33,9 @@ mongoose.connect(MONGODB_URL)
         app.listen(PORT, () => {
             console.log(`App is listening to PORT: ${PORT}`);
         });
+        app.get('/', (req, res) => {
+            res.json("Deployed Man!");
+        });
     })
     .catch((error) => {
         console.log('Error in MongoDB Connection');
