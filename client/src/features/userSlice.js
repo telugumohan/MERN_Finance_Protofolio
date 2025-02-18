@@ -1,30 +1,45 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {fetchUsersDataFromApi} from "../api/index.js";
+import * as API from "../api/index.js"
 
-export const fetchUserAction = createAsyncThunk("FETCH_USER", async () => {
-    const response = await fetchUsersDataFromApi();
-    return response.data;
+export const signUpAction = createAsyncThunk('SIGN_UP', async (formData) => {
+    const {data} = await API.signUpApi(formData);
+    return data;
+});
+
+export const signInAction = createAsyncThunk('SIGN_IN', async (formData) => {
+    const {data} = await API.signInApi(formData);
+    return data;
 });
 
 const userSlice = createSlice(
     {
-        name: "user_slice",
+        name: 'user_slice',
         initialState: {
-            users: {},
-            status: null,
+            user: null,
+            status: null
         },
-        reducers: {},
+        reducers: {
+            logoutAction: (state, action) => {
+                state.user = null;
+                state.status = null;
+                localStorage.setItem('profile', null);
+            }
+        },
         extraReducers: (builder) => {
             builder
-                .addCase(fetchUserAction.fulfilled, (state, action) => {
-                    state.users = action.payload;
-                    state.status = "success"
+                .addCase(signUpAction.fulfilled, (state, action) => {
+                    state.status = 'success';
+                    state.user = action.payload;
+                    localStorage.setItem('profile', JSON.stringify(action.payload));
                 })
-                .addCase(fetchUserAction.pending, (state, action) => {
-                    state.status = "loading"
+                .addCase(signInAction.fulfilled, (state, action) => {
+                    state.status = 'success';
+                    state.user = action.payload;
+                    localStorage.setItem('profile', JSON.stringify(action.payload));
                 })
         }
     }
 );
 
-export default userSlice.reducer;
+export const {logoutAction} = userSlice.actions;
+export default  userSlice.reducer;
