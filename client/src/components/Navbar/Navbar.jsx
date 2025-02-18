@@ -51,7 +51,6 @@ const Navbar = () => {
     };
   }, [dispatch, navigate, profile]);
   
-
   return (
     <header>
       <nav className="flex justify-between items-center px-8 py-2 bg-[#8B7F72] absolute w-full z-20">
